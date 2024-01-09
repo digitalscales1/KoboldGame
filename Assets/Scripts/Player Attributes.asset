@@ -15,5 +15,5 @@ MonoBehaviour:
   athletics: 0
   evasion: 0
   wits: 0
-  movementSpeed: 0
+  movementSpeed: 5
   rotationSpeed: 0

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,5 +13,8 @@ public class CharacterAttributes : ScriptableObject {
 
     [Header("Movement Attributes")]
     [SerializeField] private float movementSpeed;
+    public float MovementSpeed => movementSpeed;
+
     [SerializeField] private float rotationSpeed;
+    public float RotationSpeed => rotationSpeed;
 }

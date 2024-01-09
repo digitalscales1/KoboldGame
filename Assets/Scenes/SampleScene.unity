@@ -2444,8 +2444,8 @@ MonoBehaviour:
   m_ActionEvents:
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5866666021919126214}
-        m_TargetAssemblyTypeName: MovementController, Assembly-CSharp
+      - m_Target: {fileID: 5866666021919126216}
+        m_TargetAssemblyTypeName: MovementMachine, Assembly-CSharp
         m_MethodName: OnMovement
         m_Mode: 0
         m_Arguments:
@@ -4607,7 +4607,6 @@ GameObject:
   - component: {fileID: 5866666021919126213}
   - component: {fileID: 127356759}
   - component: {fileID: 5866666021919126215}
-  - component: {fileID: 5866666021919126214}
   - component: {fileID: 5866666021919126216}
   m_Layer: 0
   m_Name: 'kobold '
@@ -6133,24 +6132,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &5866666021919126214
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 919132149147922949}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40a99fda703c2aa4da86130213514d74, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  camera: {fileID: 963194228}
-  direction: {x: 0, y: 0, z: 0}
-  magnitude: 0
-  smoothMovement: 20
-  movement: {x: 0, y: 0}
-  rawMovement: {x: 0, y: 0}
 --- !u!54 &5866666021919126215
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -6190,11 +6171,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4650d5c4f8afdae4d97e93079111ce0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  previous: 0
-  current: 0
-  isGrounded: 0
+  state: 0
+  other: {fileID: 0}
   attributes: {fileID: 11400000, guid: 518322f4cc979dd4a97337324e5867f6, type: 2}
   rb: {fileID: 5866666021919126215}
+  movementSmoothing: 25
+  rawInput: {x: 0, y: 0}
+  smoothInput: {x: 0, y: 0}
+  smoothVelocity: {x: 0, y: 0}
+  animator: {fileID: 5866666021919126213}
+  isGrounded: 1
 --- !u!4 &6002505820813031979
 Transform:
   m_ObjectHideFlags: 0
