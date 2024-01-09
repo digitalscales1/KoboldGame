@@ -16,4 +16,4 @@ MonoBehaviour:
   evasion: 0
   wits: 0
   movementSpeed: 5
-  rotationSpeed: 0
+  rotationSpeed: 25

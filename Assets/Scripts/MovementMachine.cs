@@ -58,9 +58,18 @@ public class MovementMachine : MonoBehaviour {
 
     private void MovingState() {
         smoothInput = Vector2.SmoothDamp(smoothInput, rawInput, ref smoothVelocity, Time.deltaTime * movementSmoothing);
-        Vector3 movement = new Vector3(smoothInput.x, 0.0f, smoothInput.y);
+        Vector3 direction = new Vector3(smoothInput.x, 0.0f, smoothInput.y);
+        float magnitude = Mathf.Clamp01(Mathf.Abs(smoothInput.x)+Mathf.Abs(smoothInput.y));
 
-        rb.velocity = movement * attributes.MovementSpeed;
+        if(magnitude > 0.1f) {
+            Quaternion look = Quaternion.LookRotation(direction);
+            Quaternion rot = Quaternion.Slerp(transform.rotation, look, Time.deltaTime * attributes.RotationSpeed * magnitude);
+
+            transform.rotation = rot;
+        }
+
+        rb.velocity = direction * magnitude * attributes.MovementSpeed;
+        animator.SetFloat("magnitude", magnitude);
     }
 
     public void OnInteraction(GameObject gameObject, bool flag) {
