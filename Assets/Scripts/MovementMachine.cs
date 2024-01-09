@@ -20,18 +20,21 @@ public class MovementMachine : MonoBehaviour {
     [Header("Movement")]
     [SerializeField] private CharacterAttributes attributes;
     [SerializeField] private Rigidbody rb;
-    [SerializeField] private float movementSmoothing = 1.0f;
-    [SerializeField] private Vector2 rawInput;
-    [SerializeField] private Vector2 smoothInput;
-    [SerializeField] private Vector2 smoothVelocity;
+    [SerializeField] private float movementSmoothing = 25.0f;
+    private Vector2 rawInput;
+    private Vector2 smoothInput;
+    private Vector2 smoothVelocity;
 
     [Header("Animation")]
     [SerializeField] private Animator animator;
 
     [Header("Grounding")]
+    [SerializeField] private LayerMask groundMask;
+    [SerializeField] private Transform middlePoint;
     [SerializeField] private bool isGrounded;
 
     private void Update() {
+        Grounding();
         SwitchingLogic();
     }
 
@@ -70,6 +73,14 @@ public class MovementMachine : MonoBehaviour {
 
         rb.velocity = direction * magnitude * attributes.MovementSpeed;
         animator.SetFloat("magnitude", magnitude);
+    }
+
+    private void Grounding() {
+        RaycastHit hit;
+        Ray ray = new Ray(middlePoint.position, Vector3.down);
+        if(Physics.SphereCast(ray, 0.25f, out hit, 3.0f, groundMask)){
+            Debug.DrawLine(middlePoint.position, hit.point, Color.red);
+        }
     }
 
     public void OnInteraction(GameObject gameObject, bool flag) {

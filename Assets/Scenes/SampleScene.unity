@@ -6176,10 +6176,11 @@ MonoBehaviour:
   attributes: {fileID: 11400000, guid: 518322f4cc979dd4a97337324e5867f6, type: 2}
   rb: {fileID: 5866666021919126215}
   movementSmoothing: 25
-  rawInput: {x: 0, y: 0}
-  smoothInput: {x: 0, y: 0}
-  smoothVelocity: {x: 0, y: 0}
   animator: {fileID: 5866666021919126213}
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 0
+  middlePoint: {fileID: 1201024647}
   isGrounded: 1
 --- !u!4 &6002505820813031979
 Transform:
