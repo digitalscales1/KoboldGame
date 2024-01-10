@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,7 +7,7 @@ using UnityEngine.InputSystem;
 public class MovementMachine : MonoBehaviour {
 
     public enum State {
-        Moving, Interacting, Falling, Dead
+        Moving, Interacting, Falling, EndFalling, Dead
     };
 
     [Header("State Machine")]
@@ -25,6 +26,9 @@ public class MovementMachine : MonoBehaviour {
     private Vector2 smoothInput;
     private Vector2 smoothVelocity;
 
+    [Header("Falling")]
+    [SerializeField] private float gravity;
+
     [Header("Animation")]
     [SerializeField] private Animator animator;
 
@@ -32,10 +36,21 @@ public class MovementMachine : MonoBehaviour {
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private Transform middlePoint;
     [SerializeField] private bool isGrounded;
+    [SerializeField] private float distance;
+
+    [SerializeField] private float groundingSmoothing = 10.0f;
+    [SerializeField] private float groundingMinDistance = 1.5f;
+    [SerializeField] private float fallingMinDistance = 1.1f;
+
+
+    public GameObject obj;
 
     private void Update() {
-        Grounding();
+
+        animator.SetBool("isFalling", state == State.Falling);
+
         SwitchingLogic();
+        Grounding();
     }
 
     private void SwitchingLogic() {
@@ -46,7 +61,10 @@ public class MovementMachine : MonoBehaviour {
         // swich logic state
         switch(state) {
             case State.Falling: 
-                if(!isGrounded) { return; }
+                if(isGrounded) { state = State.EndFalling; }
+                break;
+
+            case State.EndFalling:
                 state = State.Moving;
                 break;
         }
@@ -55,6 +73,14 @@ public class MovementMachine : MonoBehaviour {
         switch(state) {
             case State.Moving:
                 MovingState();
+                break;
+
+            case State.Falling:
+                FallingState();
+                break;
+
+            case State.EndFalling:
+                EndFallingState();
                 break;
         }
     }
@@ -75,11 +101,39 @@ public class MovementMachine : MonoBehaviour {
         animator.SetFloat("magnitude", magnitude);
     }
 
+    private void FallingState() {
+        gravity += Physics.gravity.y * Time.deltaTime;
+
+        Vector3 velocity = new Vector3(rb.velocity.x, gravity, rb.velocity.z);
+        rb.velocity = velocity;
+    }
+
+    private void EndFallingState() {
+        gravity = 0.0f;
+        
+        Vector3 velocity = new Vector3(rb.velocity.x, 0.0f, rb.velocity.z);
+        rb.velocity = velocity;
+    }
+
     private void Grounding() {
         RaycastHit hit;
         Ray ray = new Ray(middlePoint.position, Vector3.down);
-        if(Physics.SphereCast(ray, 0.25f, out hit, 3.0f, groundMask)){
-            Debug.DrawLine(middlePoint.position, hit.point, Color.red);
+        if(Physics.SphereCast(ray, 0.3f, out hit, 3.0f, groundMask)){
+
+            distance = middlePoint.position.y - hit.point.y;
+
+            if(isGrounded) { isGrounded = distance <= groundingMinDistance; } 
+            else { isGrounded = distance <= fallingMinDistance; }
+
+        } else {
+            isGrounded = false;
+        }
+
+        // stick to ground
+        if (isGrounded && state == State.Moving){ 
+            float y = Mathf.Lerp(hit.point.y, transform.position.y, groundingSmoothing);
+            Vector3 pos = new Vector3(transform.position.x, hit.point.y, transform.position.z);
+            transform.position = pos;
         }
     }
 

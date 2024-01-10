@@ -1,0 +1,4 @@
+repository "KoboldGame@digitalscales@cloud"
+  path "/"
+    br "/main"
+    co "/main"
