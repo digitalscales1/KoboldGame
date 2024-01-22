@@ -7,18 +7,18 @@ using UnityEngine.Events;
 
 [Serializable] public class FiniteStateMachine {
     [SerializeField] IState current;
-    public IState Current => current;
+    public IState CurrentState => current;
 
-    [SerializeField] HashSet<IState> states;
-    public HashSet<IState> States {
+    [SerializeField] Dictionary<Type, IState> states;
+    public Dictionary<Type, IState> States {
         get { return states; }
         set { states = value; }
     }
 
     [SerializeField] UnityEvent<IState> onStateChanged;
 
-    public void NextState(IState next) {
-        if(next == null) { Debug.Log("null"); return; }
+    public void NextState(Type next) {
+        if(next == null || next == current.GetType()) { Debug.Log("null"); return; }
 
         IState actual;
         bool flag = states.TryGetValue(next, out actual);
@@ -40,9 +40,7 @@ using UnityEngine.Events;
     }
 
     public void OnUpdate() {
-        IState next = current?.OnUpdate();
-        if(next == current) return;
-
+        Type next = current?.OnUpdate();
         NextState(next);
     }
 }

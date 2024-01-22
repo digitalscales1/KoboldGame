@@ -15,7 +15,7 @@ using UnityEngine;
         // Do nothing
     }
 
-    override public IState OnUpdate() {
-        return this;
+    override public Type OnUpdate() {
+        return this.GetType();
     }
 }

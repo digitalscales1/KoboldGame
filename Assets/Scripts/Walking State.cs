@@ -19,9 +19,6 @@ using UnityEngine.InputSystem;
     InputAction input;
     InputActionMap action;
 
-    [Header("Next States")]
-    [SerializeField] DummyState next;
-
     [Header("Movement Parameters")]
     [SerializeField] float smoothing = 25.0f;
 
@@ -35,7 +32,7 @@ using UnityEngine.InputSystem;
         controller.SimpleMove(Vector3.zero);
     }
 
-    public override IState OnUpdate() {
+    public override Type OnUpdate() {
         Vector2 rawInput = input.ReadValue<Vector2>();
         smoothInput = Vector2.SmoothDamp(smoothInput, rawInput, ref smoothVelocity, Time.deltaTime * smoothing);
         Vector3 direction = new Vector3(smoothInput.x, 0.0f, smoothInput.y);
@@ -54,10 +51,10 @@ using UnityEngine.InputSystem;
         anim.SetFloat("magnitude", magnitude);
 
         bool grounded = controller.isGrounded;
-        anim.SetBool("isFalling", grounded);
+        //anim.SetBool("isFalling", grounded);
 
-       if (grounded) return next;
+       //if (grounded) return typeof(DummyState);
 
-        return this;
+        return this.GetType();
     }
 }

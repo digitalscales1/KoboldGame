@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -19,7 +20,7 @@ public class BaseNode : ScriptableObject, IState {
         throw new System.NotImplementedException();
     }
 
-    public IState OnUpdate() {
-        throw new System.NotImplementedException();
+    public Type OnUpdate() {
+        throw new NotImplementedException();
     }
 }

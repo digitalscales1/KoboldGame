@@ -11,5 +11,5 @@ using UnityEngine;
 
     abstract public void OnStart();
     abstract public void OnEnd();
-    abstract public IState OnUpdate();
+    abstract public Type OnUpdate();
 }

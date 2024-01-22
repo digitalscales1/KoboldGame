@@ -7,5 +7,5 @@ public interface IState {
 
     public void OnStart();
     public void OnEnd();
-    public IState OnUpdate();
+    public Type OnUpdate();
 }

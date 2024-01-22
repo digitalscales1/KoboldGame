@@ -12,8 +12,8 @@ public class MovementManager : MonoBehaviour {
     [SerializeField] FiniteStateMachine fsm;
 
     private void Start() {
-        fsm.States = new HashSet<IState> {
-            walkingState, dummyState
+        fsm.States = new Dictionary<System.Type, IState> {
+            { walkingState.GetType(), walkingState }, { dummyState.GetType(), dummyState }
         };
 
         fsm.OnStart(walkingState);
