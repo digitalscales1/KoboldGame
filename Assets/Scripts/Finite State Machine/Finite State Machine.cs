@@ -18,12 +18,12 @@ using UnityEngine.Events;
     [SerializeField] UnityEvent<IState> onStateChanged;
 
     public void NextState(Type next) {
-        if(next == null || next == current.GetType()) { Debug.Log("null"); return; }
+        if(next == null || next == current.GetType()) return; 
 
         IState actual;
         bool flag = states.TryGetValue(next, out actual);
         
-        if(!flag || actual == null) { Debug.Log("Flag"); return; }
+        if(!flag || actual == null) return; 
 
         current?.OnEnd();
         current = actual;

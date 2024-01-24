@@ -15,7 +15,9 @@ public class DebugPlayerFSM : MonoBehaviour {
         switch(state) {
             case WalkingState: message += "Walking";
                 break;
-            case DummyState: message += "Dummy";
+            case InteractingState: message += "Interacting";
+                break;
+            case DyingState: message += "dead";
                 break;
         }
 

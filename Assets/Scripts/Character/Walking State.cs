@@ -3,12 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 [Serializable] public class WalkingState : BaseState {
-
-    Vector2 smoothInput;
-    Vector2 smoothVelocity;
 
     [Header("Dependencies")]
     [SerializeField] CharacterController controller;
@@ -21,7 +19,8 @@ using UnityEngine.InputSystem;
 
     [Header("Movement Parameters")]
     [SerializeField] float smoothing = 25.0f;
-
+    Vector2 smoothInput;
+    Vector2 smoothVelocity;
 
     public override void OnStart() {
         action = asset.FindActionMap("Player");
@@ -33,9 +32,12 @@ using UnityEngine.InputSystem;
     }
 
     public override Type OnUpdate() {
-        Vector2 rawInput = input.ReadValue<Vector2>();
-        smoothInput = Vector2.SmoothDamp(smoothInput, rawInput, ref smoothVelocity, Time.deltaTime * smoothing);
-        Vector3 direction = new Vector3(smoothInput.x, 0.0f, smoothInput.y);
+        MovementHandling();
+        return this.GetType();
+    }
+
+    private void MovementHandling() {
+        Vector3 direction = InputHandling();
         float magnitude = Mathf.Clamp01(Mathf.Abs(smoothInput.x)+Mathf.Abs(smoothInput.y));
 
         if(magnitude > 0.1f) {
@@ -46,15 +48,16 @@ using UnityEngine.InputSystem;
         }
 
         Vector3 move = direction * magnitude * attributes.MovementSpeed;
-        controller.SimpleMove(move);
-
         anim.SetFloat("magnitude", magnitude);
+        controller.SimpleMove(move);
+    }
 
-        bool grounded = controller.isGrounded;
-        //anim.SetBool("isFalling", grounded);
+    private Vector3 InputHandling() {
+        Vector2 rawInput = input.ReadValue<Vector2>();
+        smoothInput = Vector2.SmoothDamp(smoothInput, rawInput, ref smoothVelocity, Time.deltaTime * smoothing);
 
-       //if (grounded) return typeof(DummyState);
-
-        return this.GetType();
+        Vector3 combined = cameraTransform.forward * smoothInput.y + cameraTransform.right * smoothInput.x;
+        Vector3 direction = new Vector3(combined.x, 0.0f, combined.z);
+        return direction.normalized;
     }
 }
